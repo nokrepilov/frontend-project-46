@@ -12,9 +12,9 @@ const compare = (data1, data2) => {
     if (_.isEqual(data1[key], data2[key])) {
       return `  ${key}: ${data1[key]}`;
     }
-    return `- ${key}: ${data1[key]}\n+ ${key}: ${data2[key]}`;
+    return `- ${key}: ${data1[key]} + ${key}: ${data2[key]}`;
   });
-  return `{\n${diffLines.join('\n')}\n}`;
+  return `{${diffLines.join(' ')}}`;
 };
 
 export default compare;
