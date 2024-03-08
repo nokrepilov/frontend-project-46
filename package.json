@@ -21,12 +21,16 @@
   },
   "homepage": "https://github.com/nokrepilov/frontend-project-46#readme",
   "dependencies": {
+    "@jest/globals": "^29.7.0",
     "commander": "^12.0.0",
     "fs": "^0.0.1-security",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "babel-jest": "^29.7.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
