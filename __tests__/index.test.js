@@ -1,32 +1,27 @@
 import genDiff from '../src/index.js';
 
-test('if the files have different values', () => {
-  const file1 = {
-    host: 'hexlet.io',
-    timeout: 50,
-    proxy: '123.234.53.22',
-    follow: false,
-  };
-  const file2 = {
-    timeout: 20,
-    verbose: true,
-    host: 'hexlet.io',
-  };
-  expect(genDiff(file1, file2)).toBe(false);
+test('should return empty object for two empty files', () => {
+  const filePath1 = '__tests__/fixtures/empty1.yml';
+  const filePath2 = '__tests__/fixtures/empty2.yml';
+  const diff = genDiff(filePath1, filePath2);
+  expect(diff).toEqual('{}'); // Сравниваем с пустой JSON-строкой
 });
 
-test('if the files have the same values', () => {
-  const file1 = {
-    host: 'hexlet.io',
-    timeout: 50,
-    proxy: '123.234.53.22',
-    follow: false,
+test('should return differences for files with different content', () => {
+  const filePath1 = '__tests__/fixtures/file1.yml';
+  const filePath2 = '__tests__/fixtures/file2.yml';
+  const diff = genDiff(filePath1, filePath2);
+  const expectedDiff = {
+    '- common': 'value',
+    '+ common': 'different value',
+    ' setting1': 'Value 1',
+    ' setting2': '200',
+    '- setting3': true,
+    '+ setting3': null,
+    '- setting4': 'blah blah',
+    '+ setting5': {
+      key5: 'value5',
+    },
   };
-  const file2 = {
-    host: 'hexlet.io',
-    timeout: 50,
-    proxy: '123.234.53.22',
-    follow: false,
-  };
-  expect(genDiff(file1, file2)).toBe(true);
+  expect(diff).toEqual(expectedDiff); // Сравниваем с ожидаемой JSON-строкой
 });

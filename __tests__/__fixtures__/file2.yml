@@ -1,0 +1,6 @@
+common: different value
+setting1: Value 1
+setting2: 200
+setting3: null
+setting5:
+  key5: value5

@@ -9,3 +9,6 @@
 ## Compare two JSON files. Stylish format output
 
 [![asciicast](https://asciinema.org/a/SEJ3OCsU4ok5T9QwEnDEN4tzf.png)](https://asciinema.org/a/SEJ3OCsU4ok5T9QwEnDEN4tzf)
+
+## Compare two YAML files. Stylish format output
+[![asciicast](https://asciinema.org/a/f1qbbKmAeHHeR8rTAKyZjCcXe.png)](https://asciinema.org/a/f1qbbKmAeHHeR8rTAKyZjCcXe) 
