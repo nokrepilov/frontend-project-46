@@ -14,12 +14,26 @@ const expectedStylish = readFile('expected_stylish.txt');
 const expectedPlain = readFile('expected_plain.txt');
 const expectedJson = readFile('expected_json.txt');
 
-test.each([extensions])('genDiff test', (ext) => {
-  const fileBefore = getFixturePath(`file1.${ext}`);
-  const fileAfter = getFixturePath(`file2.${ext}`);
+describe.each(['stylish', 'plain', 'json'])('genDiff test with formatter %s', (formatter) => {
+  test.each(extensions)('genDiff test with extension %s', (ext) => {
+    const fileBefore = getFixturePath(`file1.${ext}`);
+    const fileAfter = getFixturePath(`file2.${ext}`);
 
-  expect(genDiff(fileBefore, fileAfter, 'stylish')).toBe(expectedStylish);
-  expect(genDiff(fileBefore, fileAfter, 'plain')).toBe(expectedPlain);
-  expect(genDiff(fileBefore, fileAfter, 'json')).toBe(expectedJson);
-  expect(genDiff(fileBefore, fileAfter)).toBe(expectedStylish);
+    let expectedOutput;
+    switch (formatter) {
+      case 'stylish':
+        expectedOutput = expectedStylish;
+        break;
+      case 'plain':
+        expectedOutput = expectedPlain;
+        break;
+      case 'json':
+        expectedOutput = expectedJson;
+        break;
+      default:
+        expectedOutput = '';
+    }
+
+    expect(genDiff(fileBefore, fileAfter, formatter)).toBe(expectedOutput);
+  });
 });
