@@ -2,11 +2,9 @@
 [![Actions Status](https://github.com/nokrepilov/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/nokrepilov/frontend-project-46/actions) [![Maintainability](https://api.codeclimate.com/v1/badges/ac416da9e266a4c0ad1e/maintainability)](https://codeclimate.com/github/nokrepilov/frontend-project-46/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/ac416da9e266a4c0ad1e/test_coverage)](https://codeclimate.com/github/nokrepilov/frontend-project-46/test_coverage) [![Github Actions gendiff](https://github.com/nokrepilov/frontend-project-46/actions/workflows/github-actions-gendiff.yml/badge.svg)](https://github.com/nokrepilov/frontend-project-46/actions/workflows/github-actions-gendiff.yml)
 
 # Generate Difference
----
 Generate Difference is a cli-utility that compares two files and shows the difference. Supports formats: yaml, json. Generating a report in the form of plain text, stylish and json.
 
 ## Installation
----
 Prerequisites: Node.js
 ```
  git clone https://github.com/nokrepilov/frontend-project-46.git
@@ -20,7 +18,6 @@ gendiff --format [option] <path to first file> <path to second file>
 ```
 
 ## Examples of using
----
 [//]: # (#### Output usage information)
 
 [//]: # (gendiff -h)
