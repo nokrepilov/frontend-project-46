@@ -2,7 +2,7 @@ install:
 	npm ci
 
 gendiff:
-	node bin/gendiff.js 
+	PATH="$$PATH:./bin" node bin/gendiff.js
 
 publish:
 	npm publish --dry-run

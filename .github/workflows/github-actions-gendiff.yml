@@ -1,5 +1,5 @@
 # Name of workflow
-name: Generate Diff Report for Config Files
+name: Test and Publish Code Coverage
 
 # Trigger the workflow on push or pull request
 on:
