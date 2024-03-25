@@ -1,12 +1,12 @@
 import yaml from 'js-yaml';
 
 const getParsedData = (data, ext) => {
-  switch (ext) {
-    case '.json':
+  const extension = ext.slice(1); // убираем точку перед расширением
+  switch (extension) {
+    case 'json':
       return JSON.parse(data);
-    case '.yml':
-      return yaml.load(data);
-    case '.yaml':
+    case 'yml':
+    case 'yaml':
       return yaml.load(data);
     default:
       throw new Error(`Unknown extname: '${ext}'!`);

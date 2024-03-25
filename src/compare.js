@@ -2,24 +2,24 @@ import _ from 'lodash';
 
 const compare = (data1, data2) => {
   const getComparisonResult = (key, value1, value2) => {
-    let result;
     if (!(key in data1)) {
-      result = { key, value: value2, type: 'added' };
-    } else if (!(key in data2)) {
-      result = { key, value: value1, type: 'deleted' };
-    } else if (_.isObject(value1) && _.isObject(value2)) {
-      result = { type: 'nested', key, children: compare(value1, value2) };
-    } else if (value1 !== value2) {
-      result = {
+      return { key, value: value2, type: 'added' };
+    }
+    if (!(key in data2)) {
+      return { key, value: value1, type: 'deleted' };
+    }
+    if (_.isObject(value1) && _.isObject(value2)) {
+      return { type: 'nested', key, children: compare(value1, value2) };
+    }
+    if (value1 !== value2) {
+      return {
         key,
         value1,
         value2,
         type: 'changed',
       };
-    } else {
-      result = { key, value: value1, type: 'unchanged' };
     }
-    return result;
+    return { key, value: value1, type: 'unchanged' };
   };
 
   const keys1 = Object.keys(data1);

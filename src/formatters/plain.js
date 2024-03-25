@@ -1,6 +1,8 @@
+import _ from 'lodash';
+
 const getValueType = (value) => {
-  if (typeof value !== 'object' || value === null) {
-    return typeof value === 'string' ? `'${value}'` : `${value}`;
+  if (!_.isObject(value) || _.isNull(value)) {
+    return _.isString(value) ? `'${value}'` : `${value}`;
   }
   return '[complex value]';
 };
