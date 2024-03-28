@@ -1,7 +1,7 @@
 import yaml from 'js-yaml';
 
 const getParsedData = (data, ext) => {
-  const extension = ext.slice(1); // убираем точку перед расширением
+  const extension = ext.startsWith('.') ? ext.slice(1) : ext; // убираем точку перед расширением, если она есть
   switch (extension) {
     case 'json':
       return JSON.parse(data);

@@ -15,9 +15,9 @@ const getData = (filePath) => {
 };
 
 const genDiff = (filepath1, filepath2, format = 'stylish') => {
-  const obj1 = getData(filepath1);
-  const obj2 = getData(filepath2);
-  const tree = compare(obj1, obj2);
+  const data1 = getData(filepath1);
+  const data2 = getData(filepath2);
+  const tree = compare(data1, data2);
   return formatter(tree, format);
 };
 
