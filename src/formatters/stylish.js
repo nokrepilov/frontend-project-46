@@ -42,7 +42,7 @@ const iter = (node, depth) => {
   }
 
   const result = node.map((item) => formatLine(item, depth, iter));
-  return `{\n${result.join('\n')}\n${indent(depth, 'last')}}`;
+  return `{\n${result.join('\n')}\n${indent(depth + 1, 'last')}}`;
 };
 
 const stylish = (tree) => iter(tree, 1);

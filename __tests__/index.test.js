@@ -16,6 +16,6 @@ describe.each(['stylish', 'plain', 'json'])('genDiff test with formatter %s', (f
     const fileAfter = getFixturePath(`file2.${ext}`);
     const expectedOutput = readFile(`expected_${formatter}.txt`);
 
-    // expect(genDiff(fileBefore, fileAfter, formatter)).toBe(expectedOutput);
+    expect(genDiff(fileBefore, fileAfter, formatter)).toBe(expectedOutput);
   });
 });
