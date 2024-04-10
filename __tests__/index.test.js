@@ -1,21 +1,30 @@
-import genDiff from '../src/index.js';
+import { test, expect } from '@jest/globals';
+import { readFile } from '../src/utils.js';
+import gendiff from '../src/index.js';
 
-const path = require('path');
-const fs = require('fs');
+const getString = (str) => String(str).trim();
 
-const projectDir = path.resolve(__dirname, '..'); // абсолютный путь к директории проекта
+const jsonStylishResult = readFile('__fixtures__/jsonStylishResult.txt');
+const ymlStylishResult = readFile('__fixtures__/ymlStylishResult.txt');
 
-const getFixturePath = (filename) => path.join(projectDir, '__fixtures__', filename); // путь к фикстурам
-const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8'); // чтение фикстур
+const jsonPlainResult = readFile('__fixtures__/jsonPlainResult.txt');
+const ymlPlainResult = readFile('__fixtures__/ymlPlainResult.txt');
 
-const extensions = ['yml', 'json'];
+const jsonFormatJsonResult = readFile('__fixtures__/jsonFormatJsonResult.txt');
+const ymlFormatJsonResult = readFile('__fixtures__/ymlFormatJsonResult.txt');
 
-describe.each(['stylish', 'plain', 'json'])('genDiff test with formatter %s', (formatter) => {
-  test.each(extensions)('genDiff test with extension %s', (ext) => {
-    const fileBefore = getFixturePath(`file1.${ext}`);
-    const fileAfter = getFixturePath(`file2.${ext}`);
-    const expectedOutput = readFile(`expected_${formatter}.txt`);
+const json1 = '__fixtures__/file1.json';
+const json2 = '__fixtures__/file2.json';
+const yml1 = '__fixtures__/file1.yml';
+const yml2 = '__fixtures__/file2.yml';
 
-    expect(genDiff(fileBefore, fileAfter, formatter)).toBe(expectedOutput);
-  });
+test.each([
+  [json1, json2, 'stylish', jsonStylishResult],
+  [yml1, yml2, 'stylish', ymlStylishResult],
+  [json1, json2, 'plain', jsonPlainResult],
+  [yml1, yml2, 'plain', ymlPlainResult],
+  [json1, json2, 'json', jsonFormatJsonResult],
+  [yml1, yml2, 'json', ymlFormatJsonResult],
+])('get diff', (a, b, c, expected) => {
+  expect(getString(gendiff(a, b, c))).toEqual(getString(expected));
 });

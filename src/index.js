@@ -1,24 +1,20 @@
-import fs from 'fs';
-import path from 'path';
-import getParsedData from './parsers.js';
-import compare from './compare.js';
-import formatter from './formatters/index.js';
+import { parseFile, readFile, getExt } from './utils.js';
+import compareFiles from './compare.js';
+import applyFormat from './formatters/index.js';
 
-const readFile = (filePath) => fs.readFileSync(path.resolve(process.cwd(), filePath), 'utf8');
-const getExt = (filePath) => path.extname(filePath);
+const gendiff = (filepath1, filepath2, format = 'stylish') => {
+  const ext1 = getExt(filepath1);
+  const data1 = readFile(filepath1);
 
-const getData = (filePath) => {
-  const fileContent = readFile(filePath);
-  const ext = getExt(filePath);
-  const obj = getParsedData(fileContent, ext);
-  return obj;
+  const ext2 = getExt(filepath2);
+  const data2 = readFile(filepath2);
+
+  const file1 = parseFile(data1, ext1);
+  const file2 = parseFile(data2, ext2);
+
+  const diff = compareFiles(file1, file2);
+
+  return applyFormat(diff, format);
 };
 
-const genDiff = (filepath1, filepath2, format = 'stylish') => {
-  const data1 = getData(filepath1);
-  const data2 = getData(filepath2);
-  const tree = compare(data1, data2);
-  return formatter(tree, format);
-};
-
-export default genDiff;
+export default gendiff;

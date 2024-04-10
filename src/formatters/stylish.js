@@ -1,50 +1,63 @@
-const indent = (depth, type = 'first') => {
-  const replacer = ' ';
-  const spacesCount = 4;
-  const currentSpace = spacesCount * depth;
-  return type === 'last' ? replacer.repeat(currentSpace - spacesCount) : replacer.repeat(currentSpace - 2);
+import _ from 'lodash';
+
+const getIndent = (depth, replacer = ' ', spacesCount = 4) => replacer.repeat(depth * spacesCount - 2);
+
+const getBracketIndent = (depth, replacer = ' ', spacesCount = 4) => replacer.repeat(depth * spacesCount - spacesCount);
+
+const doStringify = (value, depth = 1) => {
+  if (!_.isPlainObject(value)) return `${value}`;
+
+  const currentIndent = getIndent(depth);
+  const bracketIndent = getBracketIndent(depth);
+
+  const currentValue = Object.entries(value);
+
+  const lines = currentValue.map(([key, val]) => `${currentIndent}  ${key}: ${doStringify(val, depth + 1)}`);
+
+  const result = ['{', ...lines, `${bracketIndent}}`].join('\n');
+
+  return result;
 };
 
-const stringify = (node, depth) => {
-  if (typeof node !== 'object' || node === null) {
-    return `${node}`;
-  }
+const stylish = (diff) => {
+  const iter = (currentValue, depth = 1) => {
+    const currentIndent = getIndent(depth);
+    const bracketIndent = getBracketIndent(depth);
 
-  const array = Object.entries(node);
-  const result = array.map(([key, value]) => `${indent(depth + 1)}  ${key}: ${stringify(value, depth + 1)}`);
+    const lines = currentValue
+      .flatMap((node) => {
+        switch (node.status) {
+          case 'nested':
+            return `${currentIndent}  ${node.key}: ${iter(node.children, depth + 1)}`;
 
-  return `{\n${result.join('\n')}\n${indent(depth)}}`;
+          case 'deleted':
+            return `${currentIndent}- ${node.key}: ${doStringify(node.value1, depth + 1)}`;
+
+          case 'added':
+            return `${currentIndent}+ ${node.key}: ${doStringify(node.value2, depth + 1)}`;
+
+          case 'unchanged':
+            return `${currentIndent}  ${node.key}: ${doStringify(node.value1, depth + 1)}`;
+
+          case 'changed':
+            return [
+              `${currentIndent}- ${node.key}: ${doStringify(node.value1, depth + 1)}`,
+              `${currentIndent}+ ${node.key}: ${doStringify(node.value2, depth + 1)}`,
+            ];
+
+          case undefined:
+            return '';
+
+          default:
+            throw new Error(`Unknown type: ${node.status}!`);
+        }
+      })
+      .filter((line) => line !== ''); // Фильтруем пустые строки
+
+    return ['{', ...lines, `${bracketIndent}}`].join('\n');
+  };
+
+  return iter(diff);
 };
-
-const formatLine = (item, depth, iter) => {
-  const { type } = item;
-  switch (type) {
-    case 'deleted':
-      return `${indent(depth)}- ${item.key}: ${stringify(item.value, depth)}`;
-    case 'unchanged':
-      return `${indent(depth)}  ${item.key}: ${stringify(item.value, depth)}`;
-    case 'changed':
-      return `${indent(depth)}- ${item.key}: ${stringify(item.value1, depth)}\n${indent(depth)}+ ${
-        item.key
-      }: ${stringify(item.value2, depth)}`;
-    case 'added':
-      return `${indent(depth)}+ ${item.key}: ${stringify(item.value, depth)}`;
-    case 'nested':
-      return `${indent(depth)}  ${item.key}: ${iter(item.children, depth + 1)}`;
-    default:
-      throw new Error(`Unknown type: ${type}!`);
-  }
-};
-
-const iter = (node, depth) => {
-  if (typeof node !== 'object' || node === null) {
-    return `${node}`;
-  }
-
-  const result = node.map((item) => formatLine(item, depth, iter));
-  return `{\n${result.join('\n')}\n${indent(depth + 1, 'last')}}`;
-};
-
-const stylish = (tree) => iter(tree, 1);
 
 export default stylish;

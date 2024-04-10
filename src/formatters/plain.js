@@ -1,37 +1,41 @@
 import _ from 'lodash';
 
-const getValueType = (value) => {
-  if (!_.isObject(value) || _.isNull(value)) {
-    return _.isString(value) ? `'${value}'` : `${value}`;
-  }
-  return '[complex value]';
+const getValue = (value) => {
+  if (_.isPlainObject(value)) return '[complex value]';
+
+  if (_.isString(value)) return `'${value}'`;
+  return value;
 };
 
-const plain = (tree) => {
-  const iter = (nodes, keyName = '') => {
-    const result = nodes
-      .filter((node) => node.type !== 'unchanged')
-      .map((item) => {
-        const { type } = item;
-        const keyPath = [...keyName, item.key].join('');
-        switch (type) {
-          case 'deleted':
-            return `Property '${keyPath}' was removed`;
-          case 'changed':
-            return `Property '${keyPath}' was updated. From ${getValueType(item.value1)} to ${getValueType(
-              item.value2,
-            )}`;
-          case 'added':
-            return `Property '${keyPath}' was added with value: ${getValueType(item.value)}`;
+const doPlain = (diff) => {
+  const iter = (data, path) => {
+    const result = data
+      .filter((node) => node.status !== 'unchanged')
+      .map((node) => {
+        const fullPath = path === '' ? `${node.key}` : `${path}.${node.key}`;
+
+        switch (node.status) {
           case 'nested':
-            return iter(item.children, `${keyPath}.`);
+            return iter(node.children, fullPath);
+
+          case 'deleted':
+            return `Property '${fullPath}' was removed`;
+
+          case 'added':
+            return `Property '${fullPath}' was added with value: ${getValue(node.value2)}`;
+
+          case 'changed':
+            return `Property '${fullPath}' was updated. From ${getValue(node.value1)} to ${getValue(node.value2)}`;
+
           default:
-            throw new Error(`Unknown type: '${type}'!`);
+            throw new Error(`Unknown type: ${node.status}!`);
         }
       });
-    return result.join('\n');
+
+    return [...result].join('\n');
   };
-  return iter(tree, '');
+
+  return iter(diff, '');
 };
 
-export default plain;
+export default doPlain;
